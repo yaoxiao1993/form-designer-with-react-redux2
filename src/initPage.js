@@ -2,8 +2,17 @@ import { Modal, Button } from 'antd';
 import React from 'react';
 import TextItem from './TextItem'
 import DateItem from './DateItem'
+import PropTypes from 'prop-types';
 
 class InitPage extends React.Component {
+  static childContextTypes = {
+    store: PropTypes.object.isRequired,
+};
+
+getChildContext() {
+    return {store: this.state};
+}
+
   state = { 
     visible: false,
     selectedType: 'text',
@@ -11,8 +20,6 @@ class InitPage extends React.Component {
     dateChecked: false,
     addItems:[],
     disabled: false,
-    isToggleOn: false,
-    previewText: "预览"
    }
 
   showModal = () => {
@@ -22,16 +29,11 @@ class InitPage extends React.Component {
   }
 
   handleOk = (e) => {
-    console.log(e);
+    // console.log(e);
     this.setState({
       visible: false,
+      addItems:[...this.state.addItems,this.state.selectedType==='text'?{type:"Text",id:this.state.addItems.length-1}:{type:"Date",id:this.state.addItems.length-1}]
     });
-
-    if(this.state.selectedType==='text'){
-      this.state.addItems.push(<TextItem disabled={this.state.disabled}/>)
-    }else if(this.state.selectedType==='date'){
-      this.state.addItems.push(<DateItem disabled={this.state.disabled}/>)
-    }
   }
 
   handleCancel = (e) => {
@@ -56,51 +58,39 @@ class InitPage extends React.Component {
   }
 
   handleClick = () =>{
-    this.setState(prevState => ({
-      isToggleOn: !prevState.isToggleOn
-    }))
-    this.handleToggle();
-
-    this.state.addItems.map(item=>{
-      item.getAttribute("disabled") = this.state.disabled
-      return 0;
+    this.setState({
+      disabled: !this.state.disabled
     })
   }
 
-  handleToggle = () =>{
-    if(this.state.isToggleOn===false){
+  handleDelete = id =>{
       this.setState({
-        disabled: true,
-        previewText: "编辑"
-      });
-    }else{
-      this.setState({
-        disabled: false,
-        previewText: "预览"
-      });
-    }
+        addItems: this.state.addItems.filter(item=>item.id!==id)
+      })
   }
 
   render() {
     return (
       <div>
         <Button type="primary" onClick={this.showModal} id='add' disabled={this.state.disabled}>添加</Button>
-        <Button id='preview' onClick={this.handleClick}>{this.state.previewText}</Button>
+        <Button id='preview' onClick={this.handleClick}>{this.state.disabled?"编辑":"预览"}</Button>
         <Modal
           title="选择类型"
           visible={this.state.visible}
+          okText="确定"
+          cancelText="取消"
           onOk={this.handleOk}
           onCancel={this.handleCancel}
         >
           <div id="select">
-            <input id="text" type="radio" value="文本" name="add" checked={this.state.checked} onChange={this.selectedText} display={this.state.display}/>文本
+            <input id="text" type="radio" value="文本" name="add" checked={this.state.checked} onChange={this.selectedText}/>文本
             <input id="date" type="radio" value="日期" name="add" checked={this.state.checked}
             onChange={this.selectedDate}/>日期
           </div>  
         </Modal>
         {
-          this.state.addItems.map((item,i) => {
-          return <div key ={i}>{item}</div>
+          this.state.addItems.map(({type,id}) => {
+          return type==='Text'?<TextItem disabled={this.state.disabled} key={id} id={id} delete={this.handleDelete}/>:<DateItem disabled={this.state.disabled} key={id} id={id} delete={this.handleDelete} />
           })
         }
       </div>
