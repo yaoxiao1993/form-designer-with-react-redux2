@@ -10,7 +10,9 @@ class InitPage extends React.Component {
     textChecked: false,
     dateChecked: false,
     addItems:[],
-    display: 'none'
+    disabled: false,
+    isToggleOn: false,
+    previewText: "预览"
    }
 
   showModal = () => {
@@ -25,17 +27,15 @@ class InitPage extends React.Component {
       visible: false,
     });
 
-    const itemsArr = this.state.selectedType
-    console.log(itemsArr)
     if(this.state.selectedType==='text'){
-      this.state.addItems.push(<TextItem />)
+      this.state.addItems.push(<TextItem disabled={this.state.disabled}/>)
     }else if(this.state.selectedType==='date'){
-      this.state.addItems.push(<DateItem />)
+      this.state.addItems.push(<DateItem disabled={this.state.disabled}/>)
     }
   }
 
   handleCancel = (e) => {
-    console.log(e);
+    // console.log(e);
     this.setState({
       visible: false,
     });
@@ -55,15 +55,37 @@ class InitPage extends React.Component {
     });
   }
 
-  preview = () =>{
+  handleClick = () =>{
+    this.setState(prevState => ({
+      isToggleOn: !prevState.isToggleOn
+    }))
+    this.handleToggle();
 
+    this.state.addItems.map(item=>{
+      item.getAttribute("disabled") = this.state.disabled
+      return 0;
+    })
+  }
+
+  handleToggle = () =>{
+    if(this.state.isToggleOn===false){
+      this.setState({
+        disabled: true,
+        previewText: "编辑"
+      });
+    }else{
+      this.setState({
+        disabled: false,
+        previewText: "预览"
+      });
+    }
   }
 
   render() {
     return (
       <div>
-        <Button type="primary" onClick={this.showModal} id='add'>添加</Button>
-        <Button id='preview' onClick={}>预览</Button>
+        <Button type="primary" onClick={this.showModal} id='add' disabled={this.state.disabled}>添加</Button>
+        <Button id='preview' onClick={this.handleClick}>{this.state.previewText}</Button>
         <Modal
           title="选择类型"
           visible={this.state.visible}
@@ -71,7 +93,7 @@ class InitPage extends React.Component {
           onCancel={this.handleCancel}
         >
           <div id="select">
-            <input id="text" type="radio" value="文本" name="add" checked={this.state.checked} onChange={this.selectedText}/>文本
+            <input id="text" type="radio" value="文本" name="add" checked={this.state.checked} onChange={this.selectedText} display={this.state.display}/>文本
             <input id="date" type="radio" value="日期" name="add" checked={this.state.checked}
             onChange={this.selectedDate}/>日期
           </div>  

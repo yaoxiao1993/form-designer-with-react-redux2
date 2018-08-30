@@ -1,10 +1,12 @@
 import React from 'react';
-import { Input, Button } from 'antd';
+import { Button } from 'antd';
 
 class TextItem extends React.Component {
+
     render(){
-        return <div><Input />
-            <Button>删除</Button>
+        return <div>
+            <input />
+            <Button disabled={this.props.disabled}>删除</Button>
         </div>
     }
 }
