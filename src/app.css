@@ -2,3 +2,11 @@
   height: 100vh;
   text-align: center
 }
+
+Button{
+  margin:10px
+}
+
+Input{
+  width: 200px;
+}

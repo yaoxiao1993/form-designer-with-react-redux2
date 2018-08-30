@@ -1,0 +1,9 @@
+TextItem{
+    margin: 2px;
+    width:50px
+}
+
+.example-input .ant-input {
+    width: 200px;
+    margin: 0 8px 8px 0;
+  }
