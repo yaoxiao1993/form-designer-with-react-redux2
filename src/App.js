@@ -1,13 +1,17 @@
 import React, { PureComponent } from 'react';
 import { Layout } from 'antd';
 import './app.css';
+import InitPage from './initPage';
+
 const { Content } = Layout;
 class App extends PureComponent {
-  render() {
+
+
+render() {
     return (
       <Layout>
         <Content className='container'>
-          12345
+          <InitPage></InitPage>
         </Content>
       </Layout>
     );
