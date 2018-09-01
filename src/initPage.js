@@ -1,7 +1,6 @@
 import { Modal, Button } from 'antd';
 import React from 'react';
-import TextItem from './TextItem'
-import DateItem from './DateItem'
+import Item from './Item'
 import PropTypes from 'prop-types';
 
 class InitPage extends React.Component {
@@ -32,7 +31,7 @@ getChildContext() {
     // console.log(e);
     this.setState({
       visible: false,
-      addItems:[...this.state.addItems,this.state.selectedType==='text'?{type:"Text",id:this.state.addItems.length-1}:{type:"Date",id:this.state.addItems.length-1}]
+      addItems:[...this.state.addItems,this.state.selectedType==='text'?{type:"text",id:this.state.addItems.length-1}:{type:"date",id:this.state.addItems.length-1}]
     });
   }
 
@@ -90,7 +89,7 @@ getChildContext() {
         </Modal>
         {
           this.state.addItems.map(({type,id}) => {
-          return type==='Text'?<TextItem disabled={this.state.disabled} key={id} id={id} delete={this.handleDelete}/>:<DateItem disabled={this.state.disabled} key={id} id={id} delete={this.handleDelete} />
+          return <Item disabled={this.state.disabled} key={id} id={id} delete={this.handleDelete} type={type}/>
           })
         }
       </div>
